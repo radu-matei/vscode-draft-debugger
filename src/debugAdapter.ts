@@ -2,6 +2,6 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
- import { MockDebugSession } from './mockDebug';
+ import { DraftDebugSession } from './draftDebug';
 
- MockDebugSession.run(MockDebugSession);
+ DraftDebugSession.run(DraftDebugSession);

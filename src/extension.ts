@@ -6,7 +6,7 @@
 
 import * as vscode from 'vscode';
 import { WorkspaceFolder, DebugConfiguration, ProviderResult, CancellationToken } from 'vscode';
-import { MockDebugSession } from './mockDebug';
+import { DraftDebugSession } from './draftDebug';
 import * as Net from 'net';
 
 /*
@@ -14,20 +14,14 @@ import * as Net from 'net';
  * debug adapter should run inside the extension host.
  * Please note: the test suite does no longer work in this mode.
  */
-const EMBED_DEBUG_ADAPTER = false;
+const EMBED_DEBUG_ADAPTER = true;
 
 export function activate(context: vscode.ExtensionContext) {
 
-	context.subscriptions.push(vscode.commands.registerCommand('extension.mock-debug.getProgramName', config => {
-		return vscode.window.showInputBox({
-			placeHolder: "Please enter the name of a markdown file in the workspace folder",
-			value: "readme.md"
-		});
-	}));
 
 	// register a configuration provider for 'mock' debug type
-	const provider = new MockConfigurationProvider()
-	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('mock', provider));
+	const provider = new DraftConfigurationProvider()
+	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('draft', provider));
 	context.subscriptions.push(provider);
 }
 
@@ -35,7 +29,7 @@ export function deactivate() {
 	// nothing to do
 }
 
-class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
+class DraftConfigurationProvider implements vscode.DebugConfigurationProvider {
 
 	private _server?: Net.Server;
 
@@ -45,23 +39,7 @@ class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
 	 */
 	resolveDebugConfiguration(folder: WorkspaceFolder | undefined, config: DebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
 
-		// if launch.json is missing or empty
-		if (!config.type && !config.request && !config.name) {
-			const editor = vscode.window.activeTextEditor;
-			if (editor && editor.document.languageId === 'markdown' ) {
-				config.type = 'mock';
-				config.name = 'Launch';
-				config.request = 'launch';
-				config.program = '${file}';
-				config.stopOnEntry = true;
-			}
-		}
 
-		if (!config.program) {
-			return vscode.window.showInformationMessage("Cannot find a program to debug").then(_ => {
-				return undefined;	// abort launch
-			});
-		}
 
 		if (EMBED_DEBUG_ADAPTER) {
 			// start port listener on launch of first debug session
@@ -69,7 +47,7 @@ class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
 
 				// start listening on a random port
 				this._server = Net.createServer(socket => {
-					const session = new MockDebugSession();
+					const session = new DraftDebugSession();
 					session.setRunAsServer(true);
 					session.start(<NodeJS.ReadableStream>socket, socket);
 				}).listen(0);
