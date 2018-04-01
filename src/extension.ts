@@ -8,13 +8,13 @@ import * as vscode from 'vscode';
 import { WorkspaceFolder, DebugConfiguration, ProviderResult, CancellationToken } from 'vscode';
 import { DraftDebugSession } from './draftDebug';
 import * as Net from 'net';
-
 /*
  * Set the following compile time flag to true if the
  * debug adapter should run inside the extension host.
  * Please note: the test suite does no longer work in this mode.
  */
 const EMBED_DEBUG_ADAPTER = true;
+//declare var draftSession: vscode.DebugSession
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -23,6 +23,33 @@ export function activate(context: vscode.ExtensionContext) {
 	const provider = new DraftConfigurationProvider()
 	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('draft', provider));
 	context.subscriptions.push(provider);
+
+
+	draftWatch(context)
+}
+
+function draftWatch(context: vscode.ExtensionContext) {
+
+	var d: vscode.DebugSession
+
+	// keep
+	vscode.debug.onDidChangeActiveDebugSession(e => {
+		if (e != undefined) {
+			// keep a copy of the draft debug session
+			if (e.name == "draft"){
+				d = e
+			}
+		}
+	})
+	var onSave = vscode.workspace.onDidSaveTextDocument((e: vscode.TextDocument) => {
+		const session = vscode.debug.activeDebugSession;
+		// if there is a debug session and it is not draft when a file is saved
+		if ((session!= undefined) && (session.name != "draft")) {
+			d.customRequest("evaluate", {"draft-up-again": ""})
+		}
+
+	});
+	context.subscriptions.push(onSave);
 }
 
 export function deactivate() {

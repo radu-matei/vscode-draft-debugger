@@ -73,4 +73,13 @@ export class DraftDebugSession extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
+
+	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void {
+
+		this._runtime.draftUpDebug()
+
+		this.sendResponse(response);
+	}
+
+
 }
