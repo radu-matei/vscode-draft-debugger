@@ -37,11 +37,9 @@
 			"internalConsoleOptions": "openOnSessionStart"
 		},
 		{
-			"type": "mock",
+			"type": "draft",
 			"request": "launch",
-			"name": "Mock Sample",
-			"program": "${workspaceFolder}/${command:AskForProgramName}",
-			"stopOnEntry": true
+			"name": "Draft Sample"
 		}
 	],
 	"compounds": [

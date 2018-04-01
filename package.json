@@ -1,12 +1,12 @@
 {
-	"name": "mock-debug",
-	"displayName": "Mock Debug",
-	"version": "0.27.0",
-	"publisher": "andreweinand",
-	"description": "Starter extension for developing debug adapters for VS Code.",
+	"name": "draft-debug",
+	"displayName": "Draft Debug",
+	"version": "0.0.1",
+	"publisher": "acs",
+	"description": "Debug Draft applications with VSCode.",
 	"author": {
 		"name": "Microsoft Corporation",
-		"email": "aweinand@microsoft.com"
+		"email": ""
 	},
 	"license": "MIT",
 	"keywords": [
@@ -39,7 +39,9 @@
 		"publish": "vsce publish"
 	},
 	"dependencies": {
+		"@types/shelljs": "^0.7.8",
 		"await-notify": "1.0.1",
+		"shelljs": "^0.7.7",
 		"vscode-debugadapter": "1.27.0",
 		"vscode-debugprotocol": "1.27.0"
 	},
@@ -55,70 +57,36 @@
 	},
 	"main": "./out/extension",
 	"activationEvents": [
-		"onDebug",
-		"onCommand:extension.mock-debug.getProgramName"
+		"onDebug"
 	],
 	"contributes": {
-		"breakpoints": [
-			{
-				"language": "markdown"
-			}
-		],
 		"debuggers": [
 			{
-				"type": "mock",
-				"label": "Mock Debug",
+				"type": "draft",
+				"label": "Draft Debug",
 				"program": "./out/debugAdapter.js",
 				"runtime": "node",
 				"configurationAttributes": {
-					"launch": {
-						"required": [
-							"program"
-						],
-						"properties": {
-							"program": {
-								"type": "string",
-								"description": "Absolute path to a text file.",
-								"default": "${workspaceFolder}/${command:AskForProgramName}"
-							},
-							"stopOnEntry": {
-								"type": "boolean",
-								"description": "Automatically stop after launch.",
-								"default": true
-							},
-							"trace": {
-								"type": "boolean",
-								"description": "Enable logging of the Debug Adapter Protocol.",
-								"default": true
-							}
-						}
-					}
+					"launch": {}
 				},
 				"initialConfigurations": [
 					{
-						"type": "mock",
+						"type": "draft",
 						"request": "launch",
-						"name": "Ask for file name",
-						"program": "${workspaceFolder}/${command:AskForProgramName}",
-						"stopOnEntry": true
+						"name": "Ask for file name"
 					}
 				],
 				"configurationSnippets": [
 					{
-						"label": "Mock Debug: Launch",
-						"description": "A new configuration for 'debugging' a user selected markdown file.",
+						"label": "Draft Debug: Launch",
+						"description": "A new configuration for debugging Draft applications on Kubernetes",
 						"body": {
-							"type": "mock",
+							"type": "draft",
 							"request": "launch",
-							"name": "Ask for file name",
-							"program": "^\"\\${workspaceFolder}/\\${command:AskForProgramName}\"",
-							"stopOnEntry": true
+							"name": "Ask for file name"
 						}
 					}
-				],
-				"variables": {
-					"AskForProgramName": "extension.mock-debug.getProgramName"
-				}
+				]
 			}
 		]
 	}
