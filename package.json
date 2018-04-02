@@ -2,11 +2,11 @@
 	"name": "draft-debug",
 	"displayName": "Draft Debug",
 	"version": "0.0.1",
-	"publisher": "acs",
+	"publisher": "radu-matei",
 	"description": "Debug Draft applications with VSCode.",
 	"author": {
-		"name": "Microsoft Corporation",
-		"email": ""
+		"name": "Radu Matei",
+		"email": "matei.radu94@gmail.com"
 	},
 	"license": "MIT",
 	"keywords": [
@@ -16,17 +16,16 @@
 		"vscode": "^1.18.0",
 		"node": "^7.9.0"
 	},
-	"icon": "images/mock-debug-icon.png",
 	"categories": [
 		"Debuggers"
 	],
 	"private": true,
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-mock-debug.git"
+		"url": "https://github.com/radu-matei/vscode-draft-debugger.git"
 	},
 	"bugs": {
-		"url": "https://github.com/Microsoft/vscode-mock-debug/issues"
+		"url": "https://github.com/radu-matei/vscode-draft-debugger/issues"
 	},
 	"scripts": {
 		"prepublish": "tsc -p ./src",

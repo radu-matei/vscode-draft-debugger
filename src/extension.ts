@@ -14,16 +14,13 @@ import * as Net from 'net';
  * Please note: the test suite does no longer work in this mode.
  */
 const EMBED_DEBUG_ADAPTER = true;
-//declare var draftSession: vscode.DebugSession
 
 export function activate(context: vscode.ExtensionContext) {
 
-
-	// register a configuration provider for 'mock' debug type
+	// register a configuration provider for 'draft' debug type
 	const provider = new DraftConfigurationProvider()
 	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('draft', provider));
 	context.subscriptions.push(provider);
-
 
 	draftWatch(context)
 }
@@ -32,7 +29,6 @@ function draftWatch(context: vscode.ExtensionContext) {
 
 	var d: vscode.DebugSession
 
-	// keep
 	vscode.debug.onDidChangeActiveDebugSession(e => {
 		if (e != undefined) {
 			// keep a copy of the draft debug session
@@ -45,9 +41,9 @@ function draftWatch(context: vscode.ExtensionContext) {
 		const session = vscode.debug.activeDebugSession;
 		// if there is a debug session and it is not draft when a file is saved
 		if ((session!= undefined) && (session.name != "draft")) {
+			// send a custom request to restart the Draft cycle
 			d.customRequest("evaluate", {"draft-up-again": ""})
 		}
-
 	});
 	context.subscriptions.push(onSave);
 }
@@ -65,8 +61,6 @@ class DraftConfigurationProvider implements vscode.DebugConfigurationProvider {
 	 * e.g. add all missing attributes to the debug configuration.
 	 */
 	resolveDebugConfiguration(folder: WorkspaceFolder | undefined, config: DebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
-
-
 
 		if (EMBED_DEBUG_ADAPTER) {
 			// start port listener on launch of first debug session

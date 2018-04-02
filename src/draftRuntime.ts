@@ -9,10 +9,9 @@ import { Readable } from 'stream';
 import { OutputChannel } from 'vscode';
 
 /**
- * A Mock runtime with minimal debugger functionality.
+ * Draft runtime
  */
 export class DraftRuntime extends EventEmitter {
-
 
 	constructor() {
 		super();
@@ -27,13 +26,11 @@ export class DraftRuntime extends EventEmitter {
 		let output = vscode.window.createOutputChannel("draft")
 		output.show()
 
-
 		promiseFromChildProcess(executeCmd('draft up', output)).then((result) => {
 			promiseFromChildProcess(executeCmd('draft connect --dry-run', output)).then(async (result) => {
 				// async process, we don't wait for it
 				const term = vscode.window.createTerminal('draft connect', `bash`, ['-c', `draft connect ; bash`]);
 				term.show(true);
-
 
 				// we know there is a ready pod, this shoud be enough time for
 				// the portforward stuff to create the connection
@@ -51,7 +48,6 @@ export class DraftRuntime extends EventEmitter {
 					localRoot: vscode.workspace.rootPath,
 					remoteRoot: '/usr/src/app'
 				};
-
 
 				vscode.debug.startDebugging(undefined, debugConfiguration)
 				vscode.debug.onDidTerminateDebugSession((e) => {
@@ -83,15 +79,12 @@ function executeCmd(cmd: string, output: OutputChannel): ChildProcess {
 	return proc
 }
 
-
 function promiseFromChildProcess(child) {
 	return new Promise(function (resolve, reject) {
 		child.addListener("error", reject);
 		child.addListener("exit", resolve);
 	});
 }
-
-
 
 function subscribeToDataEvent(readable: Readable, outputChannel: OutputChannel): void {
 	readable.on('data', chunk => {

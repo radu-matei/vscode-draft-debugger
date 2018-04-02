@@ -18,7 +18,6 @@ export class DraftDebugSession extends LoggingDebugSession {
 
 	/**
 	 * Creates a new debug adapter that is used for one debug session.
-	 * We configure the default implementation of a debug adapter here.
 	 */
 	public constructor() {
 		super("draft-debug.txt");
@@ -68,6 +67,7 @@ export class DraftDebugSession extends LoggingDebugSession {
 		// start the program in the runtime
 		this._runtime.start();
 
+		// start a `draft up` and `draft connect` session and attach debugger
 		this._runtime.draftUpDebug();
 
 		this.sendResponse(response);
@@ -76,6 +76,9 @@ export class DraftDebugSession extends LoggingDebugSession {
 
 	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void {
 
+		// TODO - check for request type
+		//
+		// when a request is received (such as a file was saved) restart the Draft cycle
 		this._runtime.draftUpDebug()
 
 		this.sendResponse(response);
